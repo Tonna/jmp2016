@@ -27,13 +27,13 @@ case "$OPTION" in
 *)  printf "failure: invalid input\n"; print_help; exit;;
 esac
 
-if test ! -f $FILE
+
+if [ -z "$FILE" ] || test ! -f $FILE ;
 then
   printf "failure: file \"$FILE\" does not exist\n"; exit
 fi 
 
 case "$COMMAND" in
-
 list) awk '{ print NR " " $0 }' $FILE;;
 add) validate_input_non_empty; echo "$*" | cut -d ' ' -f 4- >> $FILE;;
 remove) validate_input_non_empty; validate_remove_argument $INPUT; sed -i "$INPUT"d $FILE;;

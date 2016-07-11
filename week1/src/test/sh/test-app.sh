@@ -42,7 +42,20 @@ sh $APP_SH -f not-exist > $tf
 java -jar $APP_JAVA -f not-exist > $ts
 
 printf "test 4 - file not exist - diff "
-diff $tf $ts | wc -l
-#rm $tf $ts
 
-#rm -r $TMP
+diff $tf $ts | wc -l
+rm $tf $ts
+
+#05-list-empty-file.sh
+
+touch empty
+
+sh $APP_SH -f empty > $tf
+java -jar $APP_JAVA -f empty > $ts
+
+printf "test 5 - list empty file - diff "
+diff $tf $ts | wc -l
+rm $tf $ts
+rm empty
+
+rm -r $TMP

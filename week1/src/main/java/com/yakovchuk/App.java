@@ -1,6 +1,13 @@
 package com.yakovchuk;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.OpenOption;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.List;
 
 public class App {
 
@@ -24,7 +31,11 @@ public class App {
                 } else {
                     File file = new File(filename);
                     if (file.exists()) {
-
+                        List<String> lines = Files.readAllLines(Paths.get(filename), StandardCharsets.UTF_8);
+                        if("list".equals(args[2])){
+                            
+                        }
+                        //Files.write(Paths.get(filename), lines, StandardCharsets.UTF_8, StandardOpenOption.WRITE);
                     } else {
                         outputError("failure: file \"" + filename + "\" does not exist\n");
                     }
@@ -34,6 +45,8 @@ public class App {
             }
         } catch (ArrayIndexOutOfBoundsException e) {
             invalidInput();
+        } catch (IOException e) {
+            outputError("something wrong happened during opening file!!!\n");
         }
 
     }

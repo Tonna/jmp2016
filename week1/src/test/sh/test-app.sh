@@ -58,7 +58,25 @@ diff $tf $ts | wc -l
 rm $tf $ts
 rm empty
 
-#06-add-line.sh
+#06-list-file.sh
+
+cat <<EOF >todo
+buy cat
+buy milk for cat
+EOF
+
+sh $APP_SH -f todo list > $tf
+java -jar $APP_JAVA -f todo list > $ts
+
+printf "test 6 - list file - diff \n"
+# diff $tf $ts | wc -l
+diff $tf $ts
+rm $tf $ts
+rm todo
+
+
+
+#07-add-line.sh
 
 cat <<EOF >todo
 buy cat
@@ -70,7 +88,7 @@ cp todo todo2
 
 sh $APP_SH -f todo1 add buy bread;
 java -jar $APP_JAVA -f todo2 add buy bread;
-printf "test 6 - add line - diff "
+printf "test 7 - add line - diff "
 diff todo1 todo2
 rm todo todo1 todo2
 

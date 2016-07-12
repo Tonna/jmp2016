@@ -7,6 +7,8 @@ import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 public class App {
@@ -31,11 +33,17 @@ public class App {
                 } else {
                     File file = new File(filename);
                     if (file.exists()) {
-                        List<String> lines = Files.readAllLines(Paths.get(filename), StandardCharsets.UTF_8);
                         if("list".equals(args[2])){
-                            
+                            List<String> lines = Files.readAllLines(Paths.get(filename), StandardCharsets.UTF_8);
+                            for (int i = 0; i < lines.size(); i++) {
+                                System.out.print(i + 1 + " " + lines.get(i) + "\n");
+                            }
+                        } else if("add".equals(args[2])) {
+                            List<String> lines = Files.readAllLines(Paths.get(filename), StandardCharsets.UTF_8);
+                            lines.add(join(Arrays.asList(args).subList(3, args.length)," "));
+                            Files.write(Paths.get(filename), lines, StandardCharsets.UTF_8, StandardOpenOption.WRITE);
+
                         }
-                        //Files.write(Paths.get(filename), lines, StandardCharsets.UTF_8, StandardOpenOption.WRITE);
                     } else {
                         outputError("failure: file \"" + filename + "\" does not exist\n");
                     }
@@ -49,6 +57,19 @@ public class App {
             outputError("something wrong happened during opening file!!!\n");
         }
 
+    }
+
+    private static String join(List<String> strings, String separator) {
+        StringBuffer buffer = new StringBuffer();
+        Iterator<String> iterator = strings.iterator();
+        while (iterator.hasNext()) {
+            buffer.append(iterator.next());
+            if (iterator.hasNext()) {
+                buffer.append(separator);
+            }
+        }
+        buffer.append("\n");
+        return buffer.toString();
     }
 
     private static void invalidInput() {

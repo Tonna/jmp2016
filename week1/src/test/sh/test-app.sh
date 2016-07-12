@@ -124,5 +124,27 @@ printf "test 9 - remove all - diff \n"
 diff todo1 todo2
 rm todo todo1 todo2
 
+#10-unknown-command.sh
+
+touch dummy
+
+sh $APP_SH -f dummy unknown-command > $tf
+java -jar $APP_JAVA -f dummy unknown-command > $ts
+printf "test 10 - unknown command - diff \n"
+diff $tf $ts
+rm $tf $ts
+rm dummy
+
+#11-remove-incorrect-argument.sh
+
+touch dummy
+
+sh $APP_SH -f dummy remove 1,2 > $tf
+java -jar $APP_JAVA -f dummy remove 1,2 > $ts
+printf "test 11 - remove incorrect argument - diff \n"
+diff $tf $ts
+rm $tf $ts
+rm dummy
+
 
 rm -r $TMP

@@ -51,7 +51,7 @@ public class App {
                             try {
                                 lineNumber = Integer.decode(args[3]) - 1;
                             } catch (NumberFormatException e) {
-                                outputError("Gxfhf");
+                                outputError("failure: input \"" + args[3] + "\" doesn't match number\n");
                                 System.exit(0);
                             }
                             if ((lineNumber < 0) || (lineNumber > (lines.size() - 1))) {
@@ -68,6 +68,8 @@ public class App {
                              try (PropertiesModifier pm = new PropertiesModifier("line.separator", "\n")) {
                                 Files.write(Paths.get(filename),Collections.<CharSequence>emptyList(), StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING);
                             }
+                        } else {
+                            invalidInput();
                         }
                     } else {
                         outputError("failure: file \"" + filename + "\" does not exist\n");
@@ -114,6 +116,8 @@ public class App {
 }
 
 /**
+ * http://stackoverflow.com/a/23643741/6408812
+ *
  * Class which enables temporary modifications to the System properties,
  * via an AutoCloseable.  Wrap the behavior that needs your modification
  * in a try-with-resources block in order to have your properties

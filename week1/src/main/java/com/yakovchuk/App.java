@@ -7,9 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class App {
 
@@ -40,9 +38,8 @@ public class App {
                             }
                         } else if("add".equals(args[2])) {
                             List<String> lines = Files.readAllLines(Paths.get(filename), StandardCharsets.UTF_8);
-                            lines.add(join(Arrays.asList(args).subList(3, args.length)," "));
-                            Files.write(Paths.get(filename), lines, StandardCharsets.UTF_8, StandardOpenOption.WRITE);
-
+                            String newLine = join(Arrays.asList(args).subList(3, args.length), " ");
+                            Files.write(Paths.get(filename), Collections.singletonList(newLine), StandardCharsets.UTF_8, StandardOpenOption.APPEND);
                         }
                     } else {
                         outputError("failure: file \"" + filename + "\" does not exist\n");

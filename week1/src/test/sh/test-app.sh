@@ -90,6 +90,7 @@ sh $APP_SH -f todo1 add buy bread;
 java -jar $APP_JAVA -f todo2 add buy bread;
 printf "test 7 - add line - diff "
 diff todo1 todo2
+cat -A todo1 todo2
 rm todo todo1 todo2
 
 rm -r $TMP

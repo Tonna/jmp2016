@@ -1,12 +1,10 @@
 package com.yakovchuk;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
@@ -35,19 +33,16 @@ public class App {
                 if (filename == null) {
                     invalidInput();
                 } else {
-                    File file = new File(filename);
-                    if (file.exists()) {
+                    try {
                         if (COMMAND_LIST.equals(args[2])) {
                             List<String> lines = Files.readAllLines(Paths.get(filename), StandardCharsets.UTF_8);
                             for (int i = 0; i < lines.size(); i++) {
                                 System.out.print(i + 1 + " " + lines.get(i) + "\n");
                             }
                         } else if (COMMAND_ADD.equals(args[2])) {
-                            List<String> lines = Files.readAllLines(Paths.get(filename), StandardCharsets.UTF_8);
                             String newLine = join(Arrays.asList(args).subList(3, args.length), " ");
-                            lines.add(newLine);
                             try (PropertiesModifier pm = new PropertiesModifier("line.separator", "\n")) {
-                                Files.write(Paths.get(filename), lines, StandardCharsets.UTF_8, StandardOpenOption.WRITE);
+                                Files.write(Paths.get(filename), Arrays.asList(newLine), StandardCharsets.UTF_8, StandardOpenOption.APPEND);
                             }
                         } else if (COMMAD_REMOVE.equals(args[2])) {
                             List<String> lines = Files.readAllLines(Paths.get(filename), StandardCharsets.UTF_8);
@@ -64,19 +59,19 @@ public class App {
                             List<String> newLines = new ArrayList<>(lines);
                             newLines.remove(lineNumber.intValue());
 
-                            Files.delete(Paths.get(filename));
                             try (PropertiesModifier pm = new PropertiesModifier("line.separator", "\n")) {
-                                Files.write(Paths.get(filename), newLines, StandardCharsets.UTF_8, StandardOpenOption.CREATE_NEW);
+                                Files.write(Paths.get(filename), newLines, StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING);
                             }
                         } else if (COMMAND_REMOVE_ALL.equals(args[2])) {
-                             try (PropertiesModifier pm = new PropertiesModifier("line.separator", "\n")) {
-                                Files.write(Paths.get(filename),Collections.<CharSequence>emptyList(), StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING);
+                            try (PropertiesModifier pm = new PropertiesModifier("line.separator", "\n")) {
+                                Files.write(Paths.get(filename), Collections.<CharSequence>emptyList(), StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING);
                             }
+
                         } else {
                             invalidInput();
                         }
-                    } else {
-                        outputError("failure: file \"" + filename + "\" does not exist\n");
+                    } catch (IOException e) {
+                        outputError("failure: invalid file \"" + filename + "\"\n");
                     }
                 }
             } else {
@@ -84,10 +79,7 @@ public class App {
             }
         } catch (ArrayIndexOutOfBoundsException e) {
             invalidInput();
-        } catch (IOException e) {
-            outputError("something wrong happened during opening file!!!\n");
         }
-
     }
 
     private static String join(List<String> strings, String separator) {
@@ -121,7 +113,7 @@ public class App {
 
 /**
  * http://stackoverflow.com/a/23643741/6408812
- *
+ * <p>
  * Class which enables temporary modifications to the System properties,
  * via an AutoCloseable.  Wrap the behavior that needs your modification
  * in a try-with-resources block in order to have your properties

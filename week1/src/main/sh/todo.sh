@@ -33,7 +33,7 @@ case "$OPTION" in
 esac
 
 if test ! -f $FILE
-  then printf "failure: file \"$FILE\" does not exist\n"; exit
+  then printf "failure: invalid file \"$FILE\"\n"; exit
 fi 
 
 case "$COMMAND" in

@@ -38,8 +38,8 @@ rm $tf $ts
 
 #04-file-not-exits.sh
 
-sh $APP_SH -f not-exist > $tf
-java -jar $APP_JAVA -f not-exist > $ts
+sh $APP_SH -f not-exist list > $tf
+java -jar $APP_JAVA -f not-exist list > $ts
 
 printf "test 4 - file not exist - diff \n"
 

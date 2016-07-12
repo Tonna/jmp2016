@@ -88,9 +88,25 @@ cp todo todo2
 
 sh $APP_SH -f todo1 add buy bread;
 java -jar $APP_JAVA -f todo2 add buy bread;
-printf "test 7 - add line - diff "
+printf "test 7 - add line - diff \n"
 diff todo1 todo2
-cat -A todo1 todo2
 rm todo todo1 todo2
+
+#08-remove-line.sh
+
+cat <<EOF >todo
+buy cat
+buy milk for cat
+EOF
+
+cp todo todo1
+cp todo todo2
+
+sh $APP_SH -f todo1 remove 1;
+java -jar $APP_JAVA -f todo2 remove 1;
+printf "test 8 - remove line - diff \n"
+diff todo1 todo2
+rm todo todo1 todo2
+
 
 rm -r $TMP

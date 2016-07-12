@@ -2,9 +2,10 @@ package com.yakovchuk;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.OpenOption;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
@@ -31,15 +32,37 @@ public class App {
                 } else {
                     File file = new File(filename);
                     if (file.exists()) {
-                        if("list".equals(args[2])){
+                        if ("list".equals(args[2])) {
                             List<String> lines = Files.readAllLines(Paths.get(filename), StandardCharsets.UTF_8);
                             for (int i = 0; i < lines.size(); i++) {
                                 System.out.print(i + 1 + " " + lines.get(i) + "\n");
                             }
-                        } else if("add".equals(args[2])) {
+                        } else if ("add".equals(args[2])) {
                             List<String> lines = Files.readAllLines(Paths.get(filename), StandardCharsets.UTF_8);
                             String newLine = join(Arrays.asList(args).subList(3, args.length), " ");
-                            Files.write(Paths.get(filename), Collections.singletonList(newLine), StandardCharsets.UTF_8, StandardOpenOption.APPEND);
+                            lines.add(newLine);
+                            try(PropertiesModifier pm = new PropertiesModifier("line.separator", "\n")) {
+                                Files.write(Paths.get(filename), lines, StandardCharsets.UTF_8, StandardOpenOption.WRITE);
+                            }
+                        } else if ("remove".equals(args[2])) {
+                            List<String> lines = Files.readAllLines(Paths.get(filename), StandardCharsets.UTF_8);
+                            Integer lineNumber = null;
+                            try {
+                                lineNumber = Integer.decode(args[3]) - 1;
+                            } catch (NumberFormatException e) {
+                                outputError("Gxfhf");
+                                System.exit(0);
+                            }
+                            if ((lineNumber < 0) || (lineNumber > (lines.size() - 1))) {
+                                return;
+                            }
+                            List<String> newLines = new ArrayList<>(lines);
+                            newLines.remove(lineNumber.intValue());
+
+                            Files.delete(Paths.get(filename));
+                            try(PropertiesModifier pm = new PropertiesModifier("line.separator", "\n")) {
+                                Files.write(Paths.get(filename), newLines, StandardCharsets.UTF_8, StandardOpenOption.CREATE_NEW);
+                            }
                         }
                     } else {
                         outputError("failure: file \"" + filename + "\" does not exist\n");
@@ -65,7 +88,6 @@ public class App {
                 buffer.append(separator);
             }
         }
-        buffer.append("\n");
         return buffer.toString();
     }
 
@@ -84,4 +106,38 @@ public class App {
         System.out.print(MESSAGE_COMMAND_LIST);
     }
 
+}
+
+/**
+ * Class which enables temporary modifications to the System properties,
+ * via an AutoCloseable.  Wrap the behavior that needs your modification
+ * in a try-with-resources block in order to have your properties
+ * apply only to code within that block.  Generally, alternatives
+ * such as explicitly passing in the value you need, rather than pulling
+ * it from System.getProperties(), should be preferred to using this class.
+ */
+class PropertiesModifier  implements AutoCloseable {
+    private final String original;
+
+    public PropertiesModifier(String key, String value) {
+        StringWriter sw = new StringWriter();
+        try {
+            System.getProperties().store(sw, "");
+        } catch (IOException e) {
+            e.printStackTrace(); // Shouldn't be possible with StringWriter
+        }
+        original = sw.toString();
+        System.setProperty(key, value);
+    }
+
+    @Override
+    public void close() {
+        Properties set = new Properties();
+        try {
+            set.load(new StringReader(original));
+        } catch (IOException e) {
+            e.printStackTrace(); // Shouldn't be possible with StringReader
+        }
+        System.setProperties(set);
+    }
 }

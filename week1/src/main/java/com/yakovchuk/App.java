@@ -18,6 +18,10 @@ public class App {
     public static final String MESSAGE_FAILURE_INVALID_INPUT = "failure: invalid input\n";
     public static final String OPTION_HELP = "-h";
     public static final String OPTION_FILE = "-f";
+    public static final String COMMAND_LIST = "list";
+    public static final String COMMAND_ADD = "add";
+    public static final String COMMAD_REMOVE = "remove";
+    public static final String COMMAND_REMOVE_ALL = "remove-all";
 
     public static void main(String[] args) {
         try {
@@ -33,25 +37,25 @@ public class App {
                 } else {
                     File file = new File(filename);
                     if (file.exists()) {
-                        if ("list".equals(args[2])) {
+                        if (COMMAND_LIST.equals(args[2])) {
                             List<String> lines = Files.readAllLines(Paths.get(filename), StandardCharsets.UTF_8);
                             for (int i = 0; i < lines.size(); i++) {
                                 System.out.print(i + 1 + " " + lines.get(i) + "\n");
                             }
-                        } else if ("add".equals(args[2])) {
+                        } else if (COMMAND_ADD.equals(args[2])) {
                             List<String> lines = Files.readAllLines(Paths.get(filename), StandardCharsets.UTF_8);
                             String newLine = join(Arrays.asList(args).subList(3, args.length), " ");
                             lines.add(newLine);
                             try (PropertiesModifier pm = new PropertiesModifier("line.separator", "\n")) {
                                 Files.write(Paths.get(filename), lines, StandardCharsets.UTF_8, StandardOpenOption.WRITE);
                             }
-                        } else if ("remove".equals(args[2])) {
+                        } else if (COMMAD_REMOVE.equals(args[2])) {
                             List<String> lines = Files.readAllLines(Paths.get(filename), StandardCharsets.UTF_8);
                             Integer lineNumber = null;
                             try {
                                 lineNumber = Integer.decode(args[3]) - 1;
                             } catch (NumberFormatException e) {
-                                outputError("failure: input \"" + args[3] + "\" doesn't match number\n");
+                                outputError("failure: input \"" + args[3] + "\" is not a number\n");
                                 System.exit(0);
                             }
                             if ((lineNumber < 0) || (lineNumber > (lines.size() - 1))) {
@@ -64,7 +68,7 @@ public class App {
                             try (PropertiesModifier pm = new PropertiesModifier("line.separator", "\n")) {
                                 Files.write(Paths.get(filename), newLines, StandardCharsets.UTF_8, StandardOpenOption.CREATE_NEW);
                             }
-                        } else if ("remove-all".equals(args[2])) {
+                        } else if (COMMAND_REMOVE_ALL.equals(args[2])) {
                              try (PropertiesModifier pm = new PropertiesModifier("line.separator", "\n")) {
                                 Files.write(Paths.get(filename),Collections.<CharSequence>emptyList(), StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING);
                             }

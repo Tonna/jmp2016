@@ -13,8 +13,8 @@ ts=$TMP/2 #test second
 sh $APP_SH > $tf
 java -jar $APP_JAVA > $ts
 
-printf "test 1 - empty input - diff "
-diff $tf $ts | wc -l
+printf "test 1 - empty input - diff \n"
+diff $tf $ts
 rm $tf $ts
 
 
@@ -23,8 +23,8 @@ rm $tf $ts
 sh $APP_SH -h > $tf
 java -jar $APP_JAVA -h > $ts
 
-printf "test 2 - print help - diff "
-diff $tf $ts | wc -l
+printf "test 2 - print help - diff \n"
+diff $tf $ts
 rm $tf $ts
 
 #03-unexpected-option.sh
@@ -32,8 +32,8 @@ rm $tf $ts
 sh $APP_SH -x > $tf
 java -jar $APP_JAVA -x > $ts
 
-printf "test 3 - unexpected option - diff "
-diff $tf $ts | wc -l
+printf "test 3 - unexpected option - diff \n"
+diff $tf $ts
 rm $tf $ts
 
 #04-file-not-exits.sh
@@ -41,9 +41,9 @@ rm $tf $ts
 sh $APP_SH -f not-exist > $tf
 java -jar $APP_JAVA -f not-exist > $ts
 
-printf "test 4 - file not exist - diff "
+printf "test 4 - file not exist - diff \n"
 
-diff $tf $ts | wc -l
+diff $tf $ts
 rm $tf $ts
 
 #05-list-empty-file.sh
@@ -53,8 +53,8 @@ touch empty
 sh $APP_SH -f empty > $tf
 java -jar $APP_JAVA -f empty > $ts
 
-printf "test 5 - list empty file - diff "
-diff $tf $ts | wc -l
+printf "test 5 - list empty file - diff \n"
+diff $tf $ts
 rm $tf $ts
 rm empty
 
@@ -69,7 +69,6 @@ sh $APP_SH -f todo list > $tf
 java -jar $APP_JAVA -f todo list > $ts
 
 printf "test 6 - list file - diff \n"
-# diff $tf $ts | wc -l
 diff $tf $ts
 rm $tf $ts
 rm todo

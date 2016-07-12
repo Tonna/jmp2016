@@ -16,7 +16,7 @@ print_invalid_input_message(){
 
 check_is_number(){
   if [ -z `echo $@ | grep "^[1-9][0-9]*$"` ]
-    then printf "failure: input \"$@\" doesn't match number\n"; exit;
+    then printf "failure: input \"$@\" is not a number\n"; exit;
   fi
 }
 

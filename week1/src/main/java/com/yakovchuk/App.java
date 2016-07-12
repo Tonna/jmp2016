@@ -6,6 +6,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
@@ -41,7 +42,7 @@ public class App {
                             List<String> lines = Files.readAllLines(Paths.get(filename), StandardCharsets.UTF_8);
                             String newLine = join(Arrays.asList(args).subList(3, args.length), " ");
                             lines.add(newLine);
-                            try(PropertiesModifier pm = new PropertiesModifier("line.separator", "\n")) {
+                            try (PropertiesModifier pm = new PropertiesModifier("line.separator", "\n")) {
                                 Files.write(Paths.get(filename), lines, StandardCharsets.UTF_8, StandardOpenOption.WRITE);
                             }
                         } else if ("remove".equals(args[2])) {
@@ -60,8 +61,12 @@ public class App {
                             newLines.remove(lineNumber.intValue());
 
                             Files.delete(Paths.get(filename));
-                            try(PropertiesModifier pm = new PropertiesModifier("line.separator", "\n")) {
+                            try (PropertiesModifier pm = new PropertiesModifier("line.separator", "\n")) {
                                 Files.write(Paths.get(filename), newLines, StandardCharsets.UTF_8, StandardOpenOption.CREATE_NEW);
+                            }
+                        } else if ("remove-all".equals(args[2])) {
+                             try (PropertiesModifier pm = new PropertiesModifier("line.separator", "\n")) {
+                                Files.write(Paths.get(filename),Collections.<CharSequence>emptyList(), StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING);
                             }
                         }
                     } else {
@@ -116,7 +121,7 @@ public class App {
  * such as explicitly passing in the value you need, rather than pulling
  * it from System.getProperties(), should be preferred to using this class.
  */
-class PropertiesModifier  implements AutoCloseable {
+class PropertiesModifier implements AutoCloseable {
     private final String original;
 
     public PropertiesModifier(String key, String value) {

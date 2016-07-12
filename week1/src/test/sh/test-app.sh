@@ -107,6 +107,22 @@ java -jar $APP_JAVA -f todo2 remove 1;
 printf "test 8 - remove line - diff \n"
 diff todo1 todo2
 rm todo todo1 todo2
+ 
+#09-remove-all.sh
+
+cat <<EOF >todo
+buy cat
+buy milk for cat
+EOF
+
+cp todo todo1
+cp todo todo2
+
+sh $APP_SH -f todo1 remove-all;
+java -jar $APP_JAVA -f todo2 remove-all;
+printf "test 9 - remove all - diff \n"
+diff todo1 todo2
+rm todo todo1 todo2
 
 
 rm -r $TMP

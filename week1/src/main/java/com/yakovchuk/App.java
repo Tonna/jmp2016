@@ -1,5 +1,6 @@
 package com.yakovchuk;
 
+import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,6 +16,28 @@ public class App {
     private static final String COMMAND_REMOVE = "remove";
     private static final String COMMAND_REMOVE_ALL = "remove-all";
 
+    interface Command{
+        void perform(TodoListDAO dao, PrintStream print, String[] args);
+        String getName();
+    }
+
+    static class List implements Command {
+
+        @Override
+        public void perform(TodoListDAO dao, PrintStream print, String[] args) {
+            java.util.List<String> list = dao.list();
+            for (int i = 0; i < list.size(); i++) {
+                print.println((i + 1) + " " + list.get(i));
+            }
+        }
+
+        @Override
+        public String getName() {
+            return null;
+        }
+    }
+
+
     public static void main(String[] args) {
         try {
             if (args.length == 0) {
@@ -28,10 +51,7 @@ public class App {
                 String command = args[2];
                 try {
                     if (COMMAND_LIST.equals(command)) {
-                        List<String> lines = dao.list();
-                        for (int i = 0; i < lines.size(); i++) {
-                            System.out.println(i + 1 + " " + lines.get(i));
-                        }
+                        new List().perform(dao, System.out,args);
                     } else if (COMMAND_ADD.equals(command)) {
                         String newLine = Util.join(Arrays.asList(args).subList(3, args.length), " ");
                         dao.add(newLine);

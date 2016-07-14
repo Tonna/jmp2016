@@ -22,62 +22,53 @@ public class App {
     public static final String COMMAND_REMOVE_ALL = "remove-all";
 
     public static void main(String[] args) {
+        List<String> programArguments = Arrays.asList(args);
         try {
-            if (args.length == 0) {
+            if (programArguments.size() == 0) {
                 invalidInput();
-            } else if (OPTION_HELP.equals(args[0])) {
+            } else if (OPTION_HELP.equals(programArguments.get(0))) {
                 outputHelp();
                 System.exit(0);
-            } else if (OPTION_FILE.equals(args[0])) {
-                String filename = args[1];
-                if (filename == null) {
-                    invalidInput();
-                } else {
-                    try {
-                        if (COMMAND_LIST.equals(args[2])) {
-                            List<String> lines = Files.readAllLines(Paths.get(filename), StandardCharsets.UTF_8);
-                            for (int i = 0; i < lines.size(); i++) {
-                                System.out.print(i + 1 + " " + lines.get(i) + "\n");
-                            }
-                        } else if (COMMAND_ADD.equals(args[2])) {
-                            String newLine = join(Arrays.asList(args).subList(3, args.length), " ");
-                            try (PropertiesModifier pm = new PropertiesModifier("line.separator", "\n")) {
-                                Files.write(Paths.get(filename), Arrays.asList(newLine), StandardCharsets.UTF_8, StandardOpenOption.APPEND);
-                            }
-                        } else if (COMMAD_REMOVE.equals(args[2])) {
-                            List<String> lines = Files.readAllLines(Paths.get(filename), StandardCharsets.UTF_8);
-                            Integer lineNumber = null;
-                            try {
-                                lineNumber = Integer.decode(args[3]) - 1;
-                            } catch (NumberFormatException e) {
-                                outputError("failure: input \"" + args[3] + "\" is not a number\n");
-                                System.exit(0);
-                            }
-                            if ((lineNumber < 0) || (lineNumber > (lines.size() - 1))) {
-                                return;
-                            }
-                            List<String> newLines = new ArrayList<>(lines);
-                            newLines.remove(lineNumber.intValue());
-
-                            try (PropertiesModifier pm = new PropertiesModifier("line.separator", "\n")) {
-                                Files.write(Paths.get(filename), newLines, StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING);
-                            }
-                        } else if (COMMAND_REMOVE_ALL.equals(args[2])) {
-                            try (PropertiesModifier pm = new PropertiesModifier("line.separator", "\n")) {
-                                Files.write(Paths.get(filename), Collections.<CharSequence>emptyList(), StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING);
-                            }
-
-                        } else {
-                            invalidInput();
+            } else if (OPTION_FILE.equals(programArguments.get(0))) {
+                String filename = programArguments.get(1);
+                TodoListDAO dao = new FileTodoListDAO(filename);
+                String command = programArguments.get(2);
+                try {
+                    if (COMMAND_LIST.equals(command)) {
+                        List<String> lines = dao.list();
+                        for (int i = 0; i < lines.size(); i++) {
+                            System.out.print(i + 1 + " " + lines.get(i) + "\n");
                         }
-                    } catch (IOException e) {
-                        outputError("failure: invalid file \"" + filename + "\"\n");
+                    } else if (COMMAND_ADD.equals(command)) {
+                        String newLine = join(Arrays.asList(args).subList(3, args.length), " ");
+                        Files.write(Paths.get(filename), Arrays.asList(newLine), StandardCharsets.UTF_8, StandardOpenOption.APPEND);
+                    } else if (COMMAD_REMOVE.equals(command)) {
+                        List<String> lines = Files.readAllLines(Paths.get(filename), StandardCharsets.UTF_8);
+                        Integer lineNumber = null;
+                        try {
+                            lineNumber = Integer.decode(args[3]) - 1;
+                        } catch (NumberFormatException e) {
+                            outputError("failure: input \"" + args[3] + "\" is not a number\n");
+                            System.exit(0);
+                        }
+                        if ((lineNumber < 0) || (lineNumber > (lines.size() - 1))) {
+                            return;
+                        }
+                        List<String> newLines = new ArrayList<>(lines);
+                        newLines.remove(lineNumber.intValue());
+                        Files.write(Paths.get(filename), newLines, StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING);
+                    } else if (COMMAND_REMOVE_ALL.equals(command)) {
+                        Files.write(Paths.get(filename), Collections.<CharSequence>emptyList(), StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING);
+                    } else {
+                        invalidInput();
                     }
+                } catch (Exception e) {
+                    outputError("failure: invalid file \"" + filename + "\"\n");
                 }
             } else {
                 invalidInput();
             }
-        } catch (ArrayIndexOutOfBoundsException e) {
+        } catch (IndexOutOfBoundsException e) {
             invalidInput();
         }
     }
@@ -107,6 +98,48 @@ public class App {
     private static void outputHelp() {
         System.out.print(MESSAGE_HELP);
         System.out.print(MESSAGE_COMMAND_LIST);
+    }
+
+    interface TodoListDAO {
+        List<String> list();
+
+        void add(String task);
+
+        void remove(int taskNum);
+
+        void removeAll();
+    }
+
+    static class FileTodoListDAO implements TodoListDAO {
+        private final String filename;
+
+        public FileTodoListDAO(String filename) {
+            this.filename = filename;
+        }
+
+        @Override
+        public List<String> list() {
+            try {
+                return Files.readAllLines(Paths.get(filename), StandardCharsets.UTF_8);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        @Override
+        public void add(String task) {
+
+        }
+
+        @Override
+        public void remove(int taskNum) {
+
+        }
+
+        @Override
+        public void removeAll() {
+
+        }
     }
 
 }

@@ -4,11 +4,12 @@ import com.yakovchuk.dao.TodoListDAO;
 
 import java.io.PrintStream;
 import java.util.Arrays;
+import java.util.List;
 
 enum Command {
     LIST("list") {
         @Override
-        void perform(TodoListDAO dao, PrintStream print, String[] args) {
+        void perform(TodoListDAO dao, PrintStream print, List<String> args) {
             java.util.List<String> list = dao.list();
             for (int i = 0; i < list.size(); i++) {
                 print.println((i + 1) + " " + list.get(i));
@@ -16,25 +17,25 @@ enum Command {
         }
     }, ADD("add") {
         @Override
-        void perform(TodoListDAO dao, PrintStream print, String[] args) {
-            String newLine = Util.join(Arrays.asList(args), " ");
+        void perform(TodoListDAO dao, PrintStream print, List<String> args) {
+            String newLine = Util.join(args, " ");
             dao.add(newLine);
         }
     }, REMOVE("remove") {
         @Override
-        void perform(TodoListDAO dao, PrintStream print, String[] args) {
+        void perform(TodoListDAO dao, PrintStream print, List<String> args) {
             Integer taskNum = null;
             try {
-                taskNum = Integer.decode(args[0]) - 1;
+                taskNum = Integer.decode(args.get(0)) - 1;
             } catch (NumberFormatException e) {
-                print.println("failure: input \"" + args[0] + "\" is not a number");
+                print.println("failure: input \"" + args.get(0) + "\" is not a number");
                 return;
             }
             dao.remove(taskNum);
         }
     }, REMOVE_ALL("remove-all") {
         @Override
-        void perform(TodoListDAO dao, PrintStream print, String[] args) {
+        void perform(TodoListDAO dao, PrintStream print, List<String> args) {
             dao.removeAll();
         }
     };
@@ -45,7 +46,7 @@ enum Command {
         this.name = name;
     }
 
-    abstract void perform(TodoListDAO dao, PrintStream print, String[] args);
+    abstract void perform(TodoListDAO dao, PrintStream print, List<String> args);
 
     String getName() {
         return name;

@@ -63,6 +63,10 @@ rm empty
 cat <<EOF >todo
 buy cat
 buy milk for cat
+fasdfsdfgs
+gzdftsdhtae t aergt
+bssery 
+gserg rghser
 EOF
 
 sh $APP_SH -f todo list > $tf

@@ -33,6 +33,9 @@ class TodoListApp {
                             return;
                         }
                     }
+                } catch (NumberFormatException e) {
+                    invalidNumber(out, args.get(3));
+                    return;
                 } catch (RuntimeException e) {
                     invalidFile(out, filename);
                     return;

@@ -23,14 +23,7 @@ enum Command {
     }, REMOVE("remove") {
         @Override
         void perform(TodoListDAO dao, PrintStream print, List<String> args) {
-            Integer taskNum;
-            try {
-                taskNum = Integer.decode(args.get(0)) - 1;
-            } catch (NumberFormatException e) {
-                print.println("failure: input \"" + args.get(0) + "\" is not a number");
-                return;
-            }
-            dao.remove(taskNum);
+            dao.remove(Integer.decode(args.get(0)) - 1);
         }
     }, REMOVE_ALL("remove-all") {
         @Override

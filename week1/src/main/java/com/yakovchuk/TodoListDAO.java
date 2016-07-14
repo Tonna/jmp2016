@@ -2,7 +2,7 @@ package com.yakovchuk;
 
 import java.util.List;
 
-interface TodoListDAO {
+public interface TodoListDAO {
     List<String> list();
 
     void add(String task);

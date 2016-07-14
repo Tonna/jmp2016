@@ -3,7 +3,6 @@ package com.yakovchuk;
 import com.yakovchuk.dao.TodoListDAO;
 
 import java.io.PrintStream;
-import java.util.Arrays;
 import java.util.List;
 
 enum Command {
@@ -24,7 +23,7 @@ enum Command {
     }, REMOVE("remove") {
         @Override
         void perform(TodoListDAO dao, PrintStream print, List<String> args) {
-            Integer taskNum = null;
+            Integer taskNum;
             try {
                 taskNum = Integer.decode(args.get(0)) - 1;
             } catch (NumberFormatException e) {
@@ -40,7 +39,7 @@ enum Command {
         }
     };
 
-    private String name;
+    private final String name;
 
     Command(String name) {
         this.name = name;

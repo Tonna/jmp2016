@@ -2,7 +2,7 @@ package com.yakovchuk;
 
 import java.io.PrintStream;
 
-public class UserOutputHelper {
+class UserOutputHelper {
 
     private static final String MESSAGE_HELP = "expected input \"-[fh] [file name] [command] [command args]\"";
     private static final String MESSAGE_COMMAND_LIST = "command list:\n  list\n  add [text]\n  remove [task number]\n  remove all";

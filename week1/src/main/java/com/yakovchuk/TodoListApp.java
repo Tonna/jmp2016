@@ -4,36 +4,37 @@ import com.yakovchuk.dao.FileTodoListDAO;
 import com.yakovchuk.dao.TodoListDAO;
 
 import java.io.PrintStream;
-import java.util.Arrays;
+import java.util.List;
 
-import static com.yakovchuk.UserOutputHelper.invalidFile;
-import static com.yakovchuk.UserOutputHelper.invalidInput;
-import static com.yakovchuk.UserOutputHelper.outputHelp;
+import static com.yakovchuk.UserOutputHelper.*;
 
-public class TodoListApp {
+class TodoListApp {
 
     private static final String OPTION_HELP = "-h";
     private static final String OPTION_FILE = "-f";
 
-    void run(String[] args) {
+    void run(List<String> args) {
         PrintStream out = System.out;
         try {
-            if (OPTION_HELP.equals(args[0])) {
+            String option = args.get(0);
+            if (OPTION_HELP.equals(option)) {
                 outputHelp(out);
                 return;
-            } else if (OPTION_FILE.equals(args[0])) {
-                String filename = args[1];
-                String commandFromUser = args[2];
+            } else if (OPTION_FILE.equals(option)) {
+                String filename = args.get(1);
                 TodoListDAO dao = new FileTodoListDAO(filename);
+
+                String commandFromUser = args.get(2);
                 try {
                     for (Command command : Command.values()) {
                         if (command.getName().equals(commandFromUser)) {
-                            command.perform(dao, out, Arrays.asList(args).subList(3, args.length));
+                            List<String> argumentsForCommand = args.subList(3, args.size());
+                            command.perform(dao, out, argumentsForCommand);
                             return;
                         }
                     }
                 } catch (RuntimeException e) {
-                    invalidFile(out,filename);
+                    invalidFile(out, filename);
                     return;
                 }
             }
@@ -44,6 +45,4 @@ public class TodoListApp {
             outputHelp(out);
         }
     }
-
-
 }

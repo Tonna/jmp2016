@@ -1,7 +1,5 @@
 package com.yakovchuk.dao;
 
-import com.yakovchuk.dao.TodoListDAO;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -40,7 +38,7 @@ public class FileTodoListDAO implements TodoListDAO {
 
     @Override
     public void remove(int taskNum) {
-        List<String> lines = null;
+        List<String> lines;
         try {
             lines = Files.readAllLines(path, UTF_8);
             if ((taskNum < 0) || (taskNum > (lines.size() - 1))) {

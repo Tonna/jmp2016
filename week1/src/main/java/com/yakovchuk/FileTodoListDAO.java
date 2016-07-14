@@ -1,25 +1,27 @@
 package com.yakovchuk;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.nio.file.StandardOpenOption.APPEND;
+import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
+
 class FileTodoListDAO implements TodoListDAO {
-    private final String filename;
+    private final Path path;
 
     public FileTodoListDAO(String filename) {
-        this.filename = filename;
+        path = Paths.get(filename);
     }
 
     @Override
     public List<String> list() {
         try {
-            return Files.readAllLines(Paths.get(filename), StandardCharsets.UTF_8);
+            return Files.readAllLines(path, UTF_8);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -28,7 +30,7 @@ class FileTodoListDAO implements TodoListDAO {
     @Override
     public void add(String task) {
         try {
-            Files.write(Paths.get(filename), Arrays.asList(task), StandardCharsets.UTF_8, StandardOpenOption.APPEND);
+            Files.write(path, Collections.singletonList(task), UTF_8, APPEND);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -38,12 +40,12 @@ class FileTodoListDAO implements TodoListDAO {
     public void remove(int taskNum) {
         List<String> lines = null;
         try {
-            lines = Files.readAllLines(Paths.get(filename), StandardCharsets.UTF_8);
+            lines = Files.readAllLines(path, UTF_8);
             if ((taskNum < 0) || (taskNum > (lines.size() - 1))) {
                 return;
             }
             lines.remove(taskNum);
-            Files.write(Paths.get(filename), lines, StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING);
+            Files.write(path, lines, UTF_8, TRUNCATE_EXISTING);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -52,7 +54,7 @@ class FileTodoListDAO implements TodoListDAO {
     @Override
     public void removeAll() {
         try {
-            Files.write(Paths.get(filename), Collections.<CharSequence>emptyList(), StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING);
+            Files.write(path, Collections.<CharSequence>emptyList(), UTF_8, TRUNCATE_EXISTING);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

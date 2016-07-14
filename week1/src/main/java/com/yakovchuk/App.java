@@ -1,5 +1,10 @@
 package com.yakovchuk;
 
+import com.yakovchuk.dao.FileTodoListDAO;
+import com.yakovchuk.dao.TodoListDAO;
+
+import java.util.Arrays;
+
 public class App {
 
     private static final String MESSAGE_HELP = "expected input \"-[fh] [file name] [command] [command args]\"";
@@ -7,42 +12,44 @@ public class App {
     private static final String MESSAGE_FAILURE_INVALID_INPUT = "failure: invalid input";
     private static final String OPTION_HELP = "-h";
     private static final String OPTION_FILE = "-f";
+    public static final String MESSAGE_FAILURE_INVALID_FILE = "failure: invalid file \"%s\"";
 
     public static void main(String[] args) {
         try {
-            if (args.length == 0) {
-                invalidInput();
-            } else if (OPTION_HELP.equals(args[0])) {
+            if (OPTION_HELP.equals(args[0])) {
                 outputHelp();
-                System.exit(0);
             } else if (OPTION_FILE.equals(args[0])) {
                 String filename = args[1];
                 String commandFromUser = args[2];
                 TodoListDAO dao = new FileTodoListDAO(filename);
-
                 try {
                     for (Command command : Command.values()) {
                         if (command.getName().equals(commandFromUser)) {
-                            command.perform(dao, System.out, args);
+                            command.perform(dao, System.out, Arrays.copyOfRange(args, 3, args.length));
                             return;
                         }
                     }
                     invalidInput();
-                } catch (Exception e) {
-                    outputError("failure: invalid file \"" + filename + "\"");
+                    outputHelp();
+                } catch (RuntimeException e) {
+                    invalidFile(filename);
                 }
             } else {
                 invalidInput();
+                outputHelp();
             }
         } catch (IndexOutOfBoundsException e) {
             invalidInput();
+            outputHelp();
         }
+    }
+
+    private static void invalidFile(String filename) {
+        System.out.printf(MESSAGE_FAILURE_INVALID_FILE, filename);
     }
 
     private static void invalidInput() {
         outputError(MESSAGE_FAILURE_INVALID_INPUT);
-        outputHelp();
-        System.exit(0);
     }
 
     private static void outputError(String message) {

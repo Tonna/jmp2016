@@ -1,4 +1,6 @@
-package com.yakovchuk;
+package com.yakovchuk.dao;
+
+import com.yakovchuk.dao.TodoListDAO;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -11,7 +13,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.StandardOpenOption.APPEND;
 import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 
-class FileTodoListDAO implements TodoListDAO {
+public class FileTodoListDAO implements TodoListDAO {
     private final Path path;
 
     public FileTodoListDAO(String filename) {

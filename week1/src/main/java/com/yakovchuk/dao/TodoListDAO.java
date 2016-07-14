@@ -1,4 +1,4 @@
-package com.yakovchuk;
+package com.yakovchuk.dao;
 
 import java.util.List;
 

@@ -1,9 +1,11 @@
 package com.yakovchuk;
 
+import com.yakovchuk.dao.TodoListDAO;
+
 import java.io.PrintStream;
 import java.util.Arrays;
 
-public enum Command {
+enum Command {
     LIST("list") {
         @Override
         void perform(TodoListDAO dao, PrintStream print, String[] args) {
@@ -15,7 +17,7 @@ public enum Command {
     }, ADD("add") {
         @Override
         void perform(TodoListDAO dao, PrintStream print, String[] args) {
-            String newLine = Util.join(Arrays.asList(args).subList(3, args.length), " ");
+            String newLine = Util.join(Arrays.asList(args), " ");
             dao.add(newLine);
         }
     }, REMOVE("remove") {
@@ -23,9 +25,9 @@ public enum Command {
         void perform(TodoListDAO dao, PrintStream print, String[] args) {
             Integer taskNum = null;
             try {
-                taskNum = Integer.decode(args[3]) - 1;
+                taskNum = Integer.decode(args[0]) - 1;
             } catch (NumberFormatException e) {
-                print.println("failure: input \"" + args[3] + "\" is not a number");
+                print.println("failure: input \"" + args[0] + "\" is not a number");
                 return;
             }
             dao.remove(taskNum);

@@ -2,7 +2,6 @@ package com.yakovchuk;
 
 import java.io.PrintStream;
 import java.util.Arrays;
-import java.util.List;
 
 public class App {
 
@@ -15,28 +14,6 @@ public class App {
     private static final String COMMAND_ADD = "add";
     private static final String COMMAND_REMOVE = "remove";
     private static final String COMMAND_REMOVE_ALL = "remove-all";
-
-    interface Command{
-        void perform(TodoListDAO dao, PrintStream print, String[] args);
-        String getName();
-    }
-
-    static class List implements Command {
-
-        @Override
-        public void perform(TodoListDAO dao, PrintStream print, String[] args) {
-            java.util.List<String> list = dao.list();
-            for (int i = 0; i < list.size(); i++) {
-                print.println((i + 1) + " " + list.get(i));
-            }
-        }
-
-        @Override
-        public String getName() {
-            return null;
-        }
-    }
-
 
     public static void main(String[] args) {
         try {
@@ -51,19 +28,11 @@ public class App {
                 String command = args[2];
                 try {
                     if (COMMAND_LIST.equals(command)) {
-                        new List().perform(dao, System.out,args);
+                        new List().perform(dao, System.out, args);
                     } else if (COMMAND_ADD.equals(command)) {
-                        String newLine = Util.join(Arrays.asList(args).subList(3, args.length), " ");
-                        dao.add(newLine);
+                        new Add().perform(dao, System.out, args);
                     } else if (COMMAND_REMOVE.equals(command)) {
-                        Integer taskNum = null;
-                        try {
-                            taskNum = Integer.decode(args[3]) - 1;
-                        } catch (NumberFormatException e) {
-                            outputError("failure: input \"" + args[3] + "\" is not a number");
-                            System.exit(0);
-                        }
-                        dao.remove(taskNum);
+                        new Remove().perform(dao, System.out,args);
                     } else if (COMMAND_REMOVE_ALL.equals(command)) {
                         dao.removeAll();
                     } else {
@@ -95,4 +64,60 @@ public class App {
         System.out.println(MESSAGE_COMMAND_LIST);
     }
 
+    interface Command {
+        void perform(TodoListDAO dao, PrintStream print, String[] args);
+
+        String getName();
+    }
+
+    static class List implements Command {
+
+        @Override
+        public void perform(TodoListDAO dao, PrintStream print, String[] args) {
+            java.util.List<String> list = dao.list();
+            for (int i = 0; i < list.size(); i++) {
+                print.println((i + 1) + " " + list.get(i));
+            }
+        }
+
+        @Override
+        public String getName() {
+            return null;
+        }
+    }
+
+    static class Add implements Command {
+
+        @Override
+        public void perform(TodoListDAO dao, PrintStream print, String[] args) {
+            String newLine = Util.join(Arrays.asList(args).subList(3, args.length), " ");
+            dao.add(newLine);
+        }
+
+        @Override
+        public String getName() {
+            return null;
+        }
+    }
+
+    static class Remove implements Command {
+        @Override
+        public void perform(TodoListDAO dao, PrintStream print, String[] args) {
+
+            Integer taskNum = null;
+            try {
+                taskNum = Integer.decode(args[3]) - 1;
+            } catch (NumberFormatException e) {
+                print.println("failure: input \"" + args[3] + "\" is not a number");
+                return;
+            }
+
+            dao.remove(taskNum);
+        }
+
+        @Override
+        public String getName() {
+            return null;
+        }
+    }
 }

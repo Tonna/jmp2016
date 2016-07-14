@@ -1,9 +1,5 @@
 package com.yakovchuk;
 
-import com.yakovchuk.command.*;
-
-import java.util.ArrayList;
-
 public class App {
 
     private static final String MESSAGE_HELP = "expected input \"-[fh] [file name] [command] [command args]\"";
@@ -11,17 +7,8 @@ public class App {
     private static final String MESSAGE_FAILURE_INVALID_INPUT = "failure: invalid input";
     private static final String OPTION_HELP = "-h";
     private static final String OPTION_FILE = "-f";
-    private static final String COMMAND_LIST = "list";
-    private static final String COMMAND_ADD = "add";
-    private static final String COMMAND_REMOVE = "remove";
-    private static final String COMMAND_REMOVE_ALL = "remove-all";
 
     public static void main(String[] args) {
-        java.util.List<Command> commands = new ArrayList<Command>();
-        commands.add(new List());
-        commands.add(new Add());
-        commands.add(new Remove());
-        commands.add(new RemoveAll());
         try {
             if (args.length == 0) {
                 invalidInput();
@@ -34,7 +21,7 @@ public class App {
                 TodoListDAO dao = new FileTodoListDAO(filename);
 
                 try {
-                    for (Command command : commands) {
+                    for (Command command : Command.values()) {
                         if (command.getName().equals(commandFromUser)) {
                             command.perform(dao, System.out, args);
                             return;

@@ -30,13 +30,13 @@ public class App {
                 System.exit(0);
             } else if (OPTION_FILE.equals(args[0])) {
                 String filename = args[1];
+                String commandFromUser = args[2];
                 TodoListDAO dao = new FileTodoListDAO(filename);
-                String command = args[2];
 
                 try {
-                    for (Command command1 : commands) {
-                        if (command1.getName().equals(command)) {
-                            command1.perform(dao, System.out, args);
+                    for (Command command : commands) {
+                        if (command.getName().equals(commandFromUser)) {
+                            command.perform(dao, System.out, args);
                             return;
                         }
                     }

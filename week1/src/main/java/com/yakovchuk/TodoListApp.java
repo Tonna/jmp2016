@@ -10,12 +10,12 @@ import static com.yakovchuk.UserOutputHelper.invalidFile;
 import static com.yakovchuk.UserOutputHelper.invalidInput;
 import static com.yakovchuk.UserOutputHelper.outputHelp;
 
-public class App {
+public class TodoListApp {
 
     private static final String OPTION_HELP = "-h";
     private static final String OPTION_FILE = "-f";
 
-    public static void main(String[] args) {
+    void run(String[] args) {
         PrintStream out = System.out;
         try {
             if (OPTION_HELP.equals(args[0])) {
@@ -44,7 +44,6 @@ public class App {
             outputHelp(out);
         }
     }
-
 
 
 }

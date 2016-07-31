@@ -25,6 +25,10 @@ GC_ALG_PARALLEL_SCAVENGE=-XX:+UseParallelOldGC
 GC_ALG_CMS=-XX:+UseConcMarkSweepGC
 GC_ALG_G1=-XX:+UseG1GC
 
+HEAP_SMALL=-Xmx256m
+HEAP_MEDIUM=-Xmx800m
+HEAP_BIG=-Xmx2g
+
 for java in $JAVA_7 $JAVA_8
 do
     for interval in $INTERVAL_SMALL $INTERVAL_MEDIUM $INTERVAL_BIG
@@ -35,9 +39,12 @@ do
             do
                 for gc_alg in $GC_ALG_SERIAL $GC_ALG_PARALLEL $GC_ALG_PARALLEL_COPY $GC_ALG_PARALLEL_SCAVENGE $GC_ALG_CMS $GC_ALG_G1
                 do
-                    ID=`date +%N | md5sum.exe | cut -b -6`
-                    printf "ID $ID | $java/java $gc_alg -XX:+PrintGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -Xloggc:log/$ID -cp $CLASSPATH $APP $load $interval $threads 5\n" >>log/experiment-name-log
-                    $java/java $gc_alg -XX:+PrintGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -Xloggc:log/$ID -cp $CLASSPATH $APP $load $interval $threads 1
+                    for heap in $HEAP_SMALL $HEAP_MEDIUM $HEAP_BIG
+                    do
+                        ID=`date +%N | md5sum.exe | cut -b -10`
+                        printf "ID $ID | $java/java $heap $gc_alg -XX:+PrintGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -Xloggc:log/$ID -cp $CLASSPATH $APP $load $interval $threads 5\n" >>log/experiment-name-log
+                        $java/java $heap $gc_alg -XX:+PrintGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -Xloggc:log/$ID -cp $CLASSPATH $APP $load $interval $threads 5
+                    done;
                 done;
             done;
         done;

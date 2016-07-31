@@ -7,13 +7,13 @@ import static java.lang.Thread.sleep;
 
 public class MainGC {
 
-    private static final int TEN_MINUTES = 10 * 60 * 60 * 1000;
     private static final int TEN_SECONDS = 10 * 1000;
 
     public static void main(String[] args) {
         final Integer load = Integer.valueOf(args[0]);
         final Integer interval = Integer.valueOf(args[1]);
         final Integer threads = Integer.valueOf(args[2]);
+        final Integer lifetime = Integer.valueOf(args[3]);
 
         final Runnable job = new Runnable() {
             @Override
@@ -47,7 +47,7 @@ public class MainGC {
         Runnable stopper = new Runnable() {
             @Override
             public void run() {
-                long endTime = System.currentTimeMillis() + TEN_MINUTES;
+                long endTime = System.currentTimeMillis() + (lifetime * 60 * 1000);
                 while (System.currentTimeMillis() < endTime) {
                     try {
                         sleep(TEN_SECONDS);

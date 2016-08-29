@@ -1,7 +1,5 @@
 package com.yakovchuk;
 
-import java.util.Random;
-
 public class Resource {
 
     private final String name;
@@ -11,7 +9,7 @@ public class Resource {
     }
 
     public synchronized String doStuff() {
-        return "Hi";
+        return "Do something important";
     }
 
     public String getName() {

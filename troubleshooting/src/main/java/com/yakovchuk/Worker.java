@@ -30,6 +30,7 @@ public class Worker implements Runnable {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                System.out.println(getTime() + " Worker {" + name + "} waits for resource {" + resource2.getName() + "}");
                 synchronized (resource2) {
                     System.out.println(getTime() + " Worker {" + name + "} captured resource {" + resource2.getName() + "}");
                     resource2.doStuff();

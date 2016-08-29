@@ -1,9 +1,13 @@
 package com.yakovchuk;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class TroubleshootingMain {
-    public static void main(String[] args) {
+
+    private static final Random RANDOM = new Random();
+
+    public static void main(String[] args) throws InterruptedException {
         ArrayList<Resource> resources = new ArrayList<>();
         ArrayList<Thread> workers = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
@@ -16,6 +20,7 @@ public class TroubleshootingMain {
 
         for (Thread worker : workers) {
             new Thread(worker).start();
+            Thread.sleep(RANDOM.nextInt(1000));
         }
 
 

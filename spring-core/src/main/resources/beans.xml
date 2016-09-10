@@ -8,6 +8,7 @@
     <bean id="beanB" class="com.yakovchuk.B">
         <constructor-arg ref="beanA"/>
     </bean>
+
     <bean id="beanC" class="com.yakovchuk.C" scope="singleton">
         <property name="father" ref="beanA"/>
         <lookup-method name="createD" bean="beanD"/>
@@ -15,9 +16,14 @@
     <bean id="beanD" class="com.yakovchuk.D" scope="prototype">
         <property name="name" value="Bastard"/>
     </bean>
+
     <bean id="beanEStandard" class="com.yakovchuk.E"/>
     <bean id="beanEAmended" class="com.yakovchuk.E">
         <replaced-method replacer="replacer" name="getRandom"/>
     </bean>
     <bean id="replacer" class="com.yakovchuk.MethodReplacementUsage"/>
+
+    <bean id="beanF" class="com.yakovchuk.F"
+          init-method="customInit" destroy-method="customDestroy"
+    />
 </beans>

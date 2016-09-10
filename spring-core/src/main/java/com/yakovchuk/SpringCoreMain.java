@@ -20,5 +20,10 @@ public class SpringCoreMain {
         son.setName("Johny");
         System.out.println(son);
         System.out.println(beanC);
+
+        E beanEStandard = (E) context.getBean("beanEStandard");
+        System.out.println("Get random -" + beanEStandard.getRandom());
+        E beanEAmended = (E) context.getBean("beanEAmended");
+        System.out.println("Get kind of random -" + beanEAmended.getRandom());
     }
 }

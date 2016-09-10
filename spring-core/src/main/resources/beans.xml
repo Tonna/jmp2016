@@ -15,4 +15,9 @@
     <bean id="beanD" class="com.yakovchuk.D" scope="prototype">
         <property name="name" value="Bastard"/>
     </bean>
+    <bean id="beanEStandard" class="com.yakovchuk.E"/>
+    <bean id="beanEAmended" class="com.yakovchuk.E">
+        <replaced-method replacer="replacer" name="getRandom"/>
+    </bean>
+    <bean id="replacer" class="com.yakovchuk.MethodReplacementUsage"/>
 </beans>

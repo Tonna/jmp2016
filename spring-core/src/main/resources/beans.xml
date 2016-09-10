@@ -5,4 +5,14 @@
     <bean id="beanA" class="com.yakovchuk.A">
         <property name="name" value="George"/>
     </bean>
+    <bean id="beanB" class="com.yakovchuk.B">
+        <constructor-arg ref="beanA"/>
+    </bean>
+    <bean id="beanC" class="com.yakovchuk.C" scope="singleton">
+        <property name="father" ref="beanA"/>
+        <lookup-method name="createD" bean="beanD"/>
+    </bean>
+    <bean id="beanD" class="com.yakovchuk.D" scope="prototype">
+        <property name="name" value="Bastard"/>
+    </bean>
 </beans>

@@ -10,6 +10,15 @@ public class SpringCoreMain {
 
     public static void main(String[] args) {
         ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+
         System.out.println(context.getBean("beanA"));
+        System.out.println(context.getBean("beanB"));
+
+        C beanC = (C) context.getBean("beanC");
+        System.out.println(beanC);
+        D son = beanC.getSon();
+        son.setName("Johny");
+        System.out.println(son);
+        System.out.println(beanC);
     }
 }

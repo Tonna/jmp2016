@@ -13,12 +13,14 @@
     <h2>Todo list:</h2>
         <div th:each="task,status : ${todoList}">
             <span th:text="${task}"/>
-            <br>
+            <br/>
             <a th:href="@{/deleteTask(id=${status.index})}">Delete</a>
             <a th:href="@{/editTaskForm(id=${status.index})}">Edit</a>
         </div>
 </div>
 <div>
+    <br/>
+    <br/>
     <a th:href="@{/addTaskForm}">Add new task</a>
 </div>
 </body>

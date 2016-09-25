@@ -2,10 +2,12 @@ package com.yakovchuk;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +29,13 @@ public class TodoListController {
 
     @RequestMapping("/addTask")
     public String addTask(HttpSession session, Model model,
-                          final String taskText) {
+                          final String taskText,
+                          @Valid TaskForm taskForm,
+                          BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            System.out.println(bindingResult.getAllErrors());
+            return "forward:addTaskForm";
+        }
         List<String> list =
                 getTodoList(session);
         if (list == null) {
@@ -57,7 +65,8 @@ public class TodoListController {
 
     @RequestMapping("/editTaskForm")
     public String editTaskForm(HttpSession session,
-                           @RequestParam("id") int id, Model model) {
+                               @RequestParam("id") int id,
+                               Model model) {
         List<String> todoList = getTodoList(session);
         model.addAttribute("taskText", todoList.get(id));
         return "editTask";
@@ -66,7 +75,12 @@ public class TodoListController {
     @RequestMapping("/editTask")
     public String editTask(HttpSession session,
                            @RequestParam("id") int id,
-                           @RequestParam("taskText") String taskText) {
+                           @RequestParam("taskText") String taskText,
+                           @Valid TaskForm taskForm,
+                           BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "forward:editTaskForm";
+        }
         List<String> todoList = getTodoList(session);
         todoList.set(id,taskText);
         return "redirect:list";

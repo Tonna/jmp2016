@@ -1,0 +1,18 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>JMP Todo list</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<div>
+    <form action="#" th:action="@{/editTask}" method="post">
+        <p>Edit task text</p>
+        <input type="hidden" name="id" th:value="${param.id[0]}"/>
+        <textarea id="taskText" name="taskText" th:text="*{taskText}"/>
+        <button type="submit" name="create">Save changes</button>
+    </form>
+    <a th:href="@{/list}">View tasks</a>
+</div>
+</body>
+</html>

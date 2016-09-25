@@ -11,9 +11,12 @@
 </div>
 <div th:if="${todoList != null}">
     <h2>Todo list:</h2>
-    <ul>
-        <li th:each="task : ${todoList}" th:text="${task}"></li>
-    </ul>
+        <div th:each="task,status : ${todoList}">
+            <span th:text="${task}"/>
+            <br>
+            <a th:href="@{/deleteTask(id=${status.index})}">Delete</a>
+            <a th:href="@{/editTaskForm(id=${status.index})}">Edit</a>
+        </div>
 </div>
 <div>
     <a th:href="@{/addTaskForm}">Add new task</a>

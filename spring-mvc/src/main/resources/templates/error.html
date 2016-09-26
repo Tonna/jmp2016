@@ -1,0 +1,15 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="#{title.application}"></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<h2 th:text="#{title.error}"></h2>
+<br/>
+<a th:href="@{/list}" th:text="#{page.list}"></a>
+<br/>
+<p th:text="*{errorMessage}"/>
+
+</body>
+</html>

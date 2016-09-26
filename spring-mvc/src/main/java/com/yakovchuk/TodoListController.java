@@ -3,9 +3,11 @@ package com.yakovchuk;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -84,5 +86,18 @@ public class TodoListController {
         List<String> todoList = getTodoList(session);
         todoList.set(id, taskText);
         return "redirect:list";
+    }
+
+    @ExceptionHandler(Exception.class)
+    public String failure(HttpServletRequest request,
+                          Exception exception,
+                          Model model) {
+        StackTraceElement[] stackTrace = exception.getStackTrace();
+        StringBuffer cause = new StringBuffer();
+        for (StackTraceElement element : stackTrace) {
+            cause.append(element.toString() + "\n");
+        }
+        model.addAttribute("errorMessage", cause);
+        return "error";
     }
 }

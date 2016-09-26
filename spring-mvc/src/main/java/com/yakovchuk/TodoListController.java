@@ -82,7 +82,7 @@ public class TodoListController {
             return "forward:editTaskForm";
         }
         List<String> todoList = getTodoList(session);
-        todoList.set(id,taskText);
+        todoList.set(id, taskText);
         return "redirect:list";
     }
 }

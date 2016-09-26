@@ -1,27 +1,29 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>JMP Todo list</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title th:text="#{title.application}"></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <body>
 
 <div th:if="${todoList == null}">
-    <h2>Todo list is empty</h2>
+    <h2 th:text="#{taskList.empty}"></h2>
 </div>
 <div th:if="${todoList != null}">
-    <h2>Todo list:</h2>
-        <div th:each="task,status : ${todoList}">
-            <span th:text="${task}"/>
-            <br/>
-            <a th:href="@{/deleteTask(id=${status.index})}">Delete</a>
-            <a th:href="@{/editTaskForm(id=${status.index})}">Edit</a>
-        </div>
+    <h2 th:text="#{taskList.notEmpty}"></h2>
+    <div th:each="task,status : ${todoList}">
+        <span th:text="${task}"/>
+        <br/>
+        <a th:href="@{/deleteTask(id=${status.index})}"
+           th:text="#{action.delete}"></a>
+        <a th:href="@{/editTaskForm(id=${status.index})}"
+           th:text="#{action.edit}"></a>
+    </div>
 </div>
 <div>
     <br/>
     <br/>
-    <a th:href="@{/addTaskForm}">Add new task</a>
+    <a th:href="@{/addTaskForm}" th:text="#{page.add}"></a>
 </div>
 </body>
 </html>

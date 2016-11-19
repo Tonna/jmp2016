@@ -3,7 +3,7 @@ package com.yakovchuk;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
-import static com.yakovchuk.Repository.getRepository;
+import java.util.HashMap;
 
 @Path("user")
 public class UserWebService {
@@ -11,21 +11,21 @@ public class UserWebService {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public User getUser(@QueryParam("id") final long id) {
-        return getRepository().getUsers().get(id);
+        return getUsers().get(id);
     }
 
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     public User deleteUser(@QueryParam("id") final long id) {
-        return getRepository().getUsers().remove(id);
+        return getUsers().remove(id);
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_XML)
     public User updateUser(final User user) {
-        if(getRepository().getUsers().containsKey(user.getId())) {
-            return getRepository().getUsers().put(user.getId(), user);
+        if(getUsers().containsKey(user.getId())) {
+            return getUsers().put(user.getId(), user);
         } else {
             return null;
         }
@@ -35,7 +35,11 @@ public class UserWebService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public User createUser(final User user) {
-        return getRepository().getUsers().put(user.getId(), user);
+        return getUsers().put(user.getId(), user);
+    }
+
+    private HashMap<Long, User> getUsers() {
+        return Repository.getInstance().getUsers();
     }
 }
 

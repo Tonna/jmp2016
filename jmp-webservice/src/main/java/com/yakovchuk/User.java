@@ -10,6 +10,7 @@ public class User {
     private String lastName;
     private String login;
     private String email;
+    private String sex;
 
     @XmlElement
     public long getId() {
@@ -56,6 +57,15 @@ public class User {
         this.login = login;
     }
 
+    @XmlElement
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -67,7 +77,8 @@ public class User {
         if (firstName != null ? !firstName.equals(user.firstName) : user.firstName != null) return false;
         if (lastName != null ? !lastName.equals(user.lastName) : user.lastName != null) return false;
         if (login != null ? !login.equals(user.login) : user.login != null) return false;
-        return email != null ? email.equals(user.email) : user.email == null;
+        if (email != null ? !email.equals(user.email) : user.email != null) return false;
+        return sex != null ? sex.equals(user.sex) : user.sex == null;
 
     }
 
@@ -78,6 +89,7 @@ public class User {
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
         result = 31 * result + (login != null ? login.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (sex != null ? sex.hashCode() : 0);
         return result;
     }
 
@@ -89,6 +101,7 @@ public class User {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", login='" + login + '\'' +
+                ", sex='" + sex + '\'' +
                 '}';
     }
 

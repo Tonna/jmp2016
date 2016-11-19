@@ -10,7 +10,7 @@ final class Repository {
     private Repository() {
     }
 
-    static synchronized Repository getRepository() {
+    static synchronized Repository getInstance() {
         if (instance == null) {
             instance = new Repository();
             instance.users = new HashMap<>();
